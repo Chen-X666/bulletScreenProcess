@@ -16,7 +16,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-
 def Z_Score(data):
     lenth = len(data)
     total = sum(data)
