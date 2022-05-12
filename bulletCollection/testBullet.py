@@ -76,8 +76,8 @@ def getBulletHeadDate(bullets):
 def saveBullets(bvid,bullets):
 
     # title
-    name = ['bvno','dm_userId','dm_sendTime', 'dm_text', 'dm_time', 'dm_color', 'dm_fontSize','dm_weight',
-            'id','id_str','action','dm_mode', 'dm_isSub','pool','attr']
+    name = ['bvno','dm_sendTime', 'dm_time', 'dm_text', 'dm_color', 'dm_mode', 'dm_fontSize',
+            'dm_userId','dm_isSub','dm_weight','id','id_str','action','pool','attr']
     # bulletCollection
     data = pd.DataFrame(columns=name, data=bullets)
     # print(data)
@@ -85,7 +85,7 @@ def saveBullets(bvid,bullets):
     # delete duplicates
     data = data.drop_duplicates()
     print(len(data))
-    data.to_csv('BV1ir4y1H74w.csv', encoding='utf-8', index=False,mode="a+")
+    data.to_csv('BV1ir4y1H74w222.csv', encoding='utf-8', index=False,mode="a+")
 
 def getCredential(i):
     credentials = []
@@ -129,29 +129,15 @@ if __name__ == '__main__':
         #如果爬取时间是上传时间
         while str(bulletDate) != str(pubdate):
             bulletHeadDate = getBulletHeadDate(bullets=bullets)
-            print('弹幕队头日期为{date}'.format(date=bulletHeadDate))
-            print('{date}爬取完毕'.format(date=bulletDate))
-            print(bulletHeadDate)
-            if  bulletHeadDate>=bulletDate:
-                #如果队头时间大于等于爬取时间则爬取时间-1天
-                bulletDate = bulletDate - datetime.timedelta(days=1)
-                print('正在爬取弹幕日期{date}'.format(date=bulletDate))
-                time.sleep(1)
-                creId =creId+1
-                bulletTemp = asyncio.get_event_loop().run_until_complete(
-                    getBullets(credential=getCredential(creId), bvid=bvid, bulletDate=bulletDate))
-                if len(bulletTemp)==0: break
-                for i in bulletTemp:
-                    bullets.append(i)
-            else:
-                #否则等于队头时间
-                bulletDate = bulletHeadDate
-                print('正在爬取弹幕日期{date}'.format(date=bulletDate))
-                time.sleep(2)
-                creId = creId + 1
-                for i in asyncio.get_event_loop().run_until_complete(
-                    getBullets(credential=getCredential(creId), bvid=bvid, bulletDate=bulletDate)):
-                    bullets.append(i)
+            bulletDate = bulletDate - datetime.timedelta(days=1)
+            print('正在爬取弹幕日期{date}'.format(date=bulletDate))
+            time.sleep(1)
+            creId =creId+1
+            bulletTemp = asyncio.get_event_loop().run_until_complete(
+                getBullets(credential=getCredential(creId), bvid=bvid, bulletDate=bulletDate))
+            if len(bulletTemp)==0: break
+            for i in bulletTemp:
+                bullets.append(i)
         #再爬一次发布日期
         creId = creId + 1
         print('爬发布日期')

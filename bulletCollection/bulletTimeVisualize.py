@@ -63,35 +63,36 @@ def innerTimeVisualize(inputPath):
 
 
 def outterTimeVisualize(inputPath):
-    inputs = pd.read_csv('../bulletCollection/data/yq2019-12-01_2020-12-01.csv', encoding='utf-8')
-    print(inputs.dtypes)
-    inputs['sendTime'] = inputs['sendTime'].astype('int64')
-    print(len(inputs))
-    # 数据正排序
-    inputs = inputs.sort_values(by=['sendTime'])  # 降序排列
-    # 时间搓转换
-    inputs = processTime(inputs, 'sendTime')
-    inputs = inputs[inputs['sendTime'] <= '2020-12-01']
-    # 把time列的日期时间根据 空格符
-    inputs["sendTime"] = inputs["sendTime"].apply(
-        lambda x: str(x).split(" ")[0])
-    # 获得不重复的天
-    # day_data = inputs["dm_sendTime"].drop_duplicates()
-    # day_group = inputs.groupby(["dm_sendTime"])
-
-    # for each_day in day_data:
-    #     data_each_day = day_group.get_group(each_day)
-    #     x_axis.append(each_day)
-    #     y_axis.append(len(data_each_day))
-    day_data = inputs["sendTime"].to_list()
-    data = pd.DataFrame.from_dict(Counter(day_data), orient='index').reset_index().rename(
-        columns={'index': '弹幕日期', 0: '弹幕数量'}).set_index('弹幕日期')
-    print(data)
-    dateRange = pd.date_range(start='2019-12-01', end='2020-12-01')
-    data = data.reindex(dateRange)
-    print(data)
-    data['弹幕数量'] = data['弹幕数量'].fillna(0)
-    print(data)
+    # inputs = pd.read_csv('../bulletCollection/data/yq2019-12-01_2020-12-01.csv', encoding='utf-8')
+    # print(inputs.dtypes)
+    # inputs['sendTime'] = inputs['sendTime'].astype('int64')
+    # print(len(inputs))
+    # # 数据正排序
+    # inputs = inputs.sort_values(by=['sendTime'])  # 降序排列
+    # # 时间搓转换
+    # inputs = processTime(inputs, 'sendTime')
+    # inputs = inputs[inputs['sendTime'] <= '2020-12-01']
+    # # 把time列的日期时间根据 空格符
+    # inputs["sendTime"] = inputs["sendTime"].apply(
+    #     lambda x: str(x).split(" ")[0])
+    # # 获得不重复的天
+    # # day_data = inputs["dm_sendTime"].drop_duplicates()
+    # # day_group = inputs.groupby(["dm_sendTime"])
+    #
+    # # for each_day in day_data:
+    # #     data_each_day = day_group.get_group(each_day)
+    # #     x_axis.append(each_day)
+    # #     y_axis.append(len(data_each_day))
+    # day_data = inputs["sendTime"].to_list()
+    # data = pd.DataFrame.from_dict(Counter(day_data), orient='index').reset_index().rename(
+    #     columns={'index': '弹幕日期', 0: '弹幕数量'}).set_index('弹幕日期')
+    # print(data)
+    # dateRange = pd.date_range(start='2019-12-01', end='2020-12-01')
+    # print(dateRange)
+    # data = data.reindex(dateRange,fill_value = 0)
+    # print(data)
+    # data['弹幕数量'] = data['弹幕数量'].fillna(0)
+    # print(data)
     data.to_csv('data/sendTimeData.csv',encoding='utf-8')
     sns.set()
     sns.lineplot(x=data.index, y='弹幕数量', data=data).figure.set_size_inches(16, 6)
@@ -103,7 +104,10 @@ def outterTimeVisualize(inputPath):
     #             '2019-12-18','2019-05-01',
     #             '2020-01-01','2020-06-01',
     #             '2020-12-01'])
-
+    plt.xticks(['2019-12-01','2020-01-01',
+                '2020-02-01','2020-03-01',
+                '2020-04-01','2020-05-01','2020-06-01','2020-07-01','2020-08-01','2020-09-01','2020-10-01','2020-11-01',
+                '2020-12-01'])
     #plt.xticks(np.arange(min(x_axis),max(x_axis),(max(x_axis)-min(x_axis))/5))
     # get current axis
     plt.xlabel('日期时间')
@@ -163,8 +167,8 @@ def twoDimensionTimeVisualize():
 
 
 if __name__ == '__main__':
-    twoDimensionTimeVisualize()
+    #twoDimensionTimeVisualize()
     #innerTimeVisualize(inputPath=None)
-    #outterTimeVisualize(inputPath=None)
+    outterTimeVisualize(inputPath=None)
     #countTimeData(filePath='data/sendTimeData.csv',timeColumn='sendTime',numColumn='num',startTime='2020-05-01',endTime='2020-06-01')
 

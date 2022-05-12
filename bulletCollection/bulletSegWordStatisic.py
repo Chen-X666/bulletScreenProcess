@@ -24,9 +24,9 @@ def drawPic(x):
     sns.set()
     matplotlib.rcParams['font.sans-serif'] = ['SimHei']
     matplotlib.rcParams['axes.unicode_minus'] = False
-    palette = sns.color_palette("bright", len(set(x['语料库类型'].to_list())))
-    sns.lineplot(x="弹幕字串长度", y="频数",  data=x,palette=palette,hue='语料库类型')
-    plt.xticks([1,2,3,4, 6, 8,10,20,30,40,50])
+    palette = sns.color_palette("bright", len(set(x['数据集'].to_list())))
+    sns.lineplot(x="字串长度", y="频数",  data=x,palette=palette,hue='数据集')
+    plt.xticks([0,500,1000,1500,2000,2500,3000,3500,4000,4500,5000])
     plt.show()
 
 def staticWord(filePaths, bulletTypes, column):
@@ -51,19 +51,19 @@ def staticChar(filePaths, bulletTypes, column):
     Slong = pd.DataFrame()
     for filePath, bulletType in zip(filePaths, bulletTypes):
         Slong1 = []
-        text = pd.read_csv(filePath,encoding='gbk')[column].to_list()
+        text = pd.read_csv(filePath,encoding='utf-8')[column].to_list()
         for i in text:
             #print(i)
             Slong1.append(len(str(i)))
         print(Counter(Slong1))
         Slong1 = pd.DataFrame.from_dict(Counter(Slong1), orient='index').reset_index().rename(
-            columns={'index': '弹幕字串长度', 0: '频数'})
+            columns={'index': '字串长度', 0: '频数'})
         Slong1.loc['new'] = [0, 0]
-        Slong1['语料库类型'] = bulletType
+        Slong1['数据集'] = bulletType
         Slong = pd.concat([Slong, Slong1])
         print(Slong)
     Slong = Slong.reset_index(drop=True)
-    Slong = Slong[Slong['弹幕字串长度'] <= 50]
+    Slong = Slong[Slong['字串长度'] <= 5000]
     return Slong
 
 
@@ -79,9 +79,9 @@ def get_words(txt):
 
 
 if __name__ == '__main__':
-    filenames = ['../bulletCollection/data/BV1m7411F7si.csv']
-    bulletTypes = ['疫情弹幕语料库']
-    Slong = staticChar(filePaths=filenames, bulletTypes=bulletTypes,column='dm_text')
+    filenames = ['../bulletCollection/data/微信公众号新闻.csv']
+    bulletTypes = ['微信公众号新闻']
+    Slong = staticChar(filePaths=filenames, bulletTypes=bulletTypes,column='正文')
     print(Slong)
     drawPic(Slong)
 
